@@ -1,8 +1,0 @@
-model,family,parameters,size_kB,train_s,model_ms,end_to_end_ms,unseen damage
-Logistic regression,Linear,72,2.063,0.009,0.198,3.111,0.581
-k-NN,Instance-based,8500,71.824,0.002,0.385,3.298,0.671
-SVM (RBF),Kernel,3320,28.703,0.004,0.21,3.124,0.502
-Random forest,Bagged trees,6790,735.751,0.328,12.252,15.165,0.713
-Gradient boosting,Boosted trees,8702,564.859,1.635,27.725,30.639,0.751
-MLP,Neural net (features),3364,88.972,0.114,0.231,3.144,0.651
-1D-CNN,Neural net (raw signal),24948,99.117,16.957,1.864,1.864,0.616

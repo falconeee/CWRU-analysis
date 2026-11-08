@@ -8,7 +8,7 @@ The notebook answers three questions:
 2. **How much of a model's score survives when the test data comes from conditions it never saw?** One random forest under three test protocols: random windows, unseen motor load, unseen fault size.
 3. **Which lightweight classifier family generalises best, and at what cost?** Logistic regression, k-NN, SVM, random forest, gradient boosting, MLP and a small 1D-CNN on raw vibration, evaluated on the same folds, plus model size and latency.
 
-All figures are rendered inside the notebook; open it on GitHub to see them.
+All figures and result tables live in the notebook outputs; no files are written to disk. Open the notebook on GitHub to see them.
 
 ## Data
 
@@ -33,15 +33,15 @@ Balanced accuracy, mean over 5 seeds (1D-CNN: 3 seeds). Chance is 0.25.
 
 | Model | Family | Random windows | Unseen load | Unseen damage | Size (kB) | End-to-end ms / window |
 |---|---|---|---|---|---|---|
-| Gradient boosting | Boosted trees | 0.986 | 0.946 | **0.751** | 565 | 30.6* |
-| Random forest | Bagged trees | 0.992 | 0.984 | 0.713 | 736 | 15.2* |
-| k-NN | Instance-based | 0.965 | 0.930 | 0.671 | 72 | 3.3 |
-| MLP | Neural net (features) | 0.902 | 0.888 | 0.651 | 89 | 3.1 |
-| 1D-CNN | Neural net (raw signal) | **1.000** | **0.986** | 0.616 | 99 | **1.9** |
-| Logistic regression | Linear | 0.945 | 0.902 | 0.581 | 2 | 3.1 |
-| SVM (RBF) | Kernel | 0.949 | 0.907 | 0.502 | 29 | 3.1 |
+| Gradient boosting | Boosted trees | 0.986 | 0.946 | **0.751** | 565 | 7.6* |
+| Random forest | Bagged trees | 0.992 | 0.984 | 0.713 | 736 | 9.4* |
+| k-NN | Instance-based | 0.965 | 0.930 | 0.671 | 72 | 1.5 |
+| MLP | Neural net (features) | 0.902 | 0.888 | 0.651 | 89 | 1.5 |
+| 1D-CNN | Neural net (raw signal) | **1.000** | **0.986** | 0.616 | 99 | **0.6** |
+| Logistic regression | Linear | 0.945 | 0.902 | 0.581 | 2 | 1.4 |
+| SVM (RBF) | Kernel | 0.949 | 0.907 | 0.502 | 29 | 1.4 |
 
-\* Tree latency in scikit-learn is mostly per-call Python overhead; feature extraction takes ~2.9 ms of each feature-based figure. Latency was measured on a laptop CPU.
+\* Tree latency in scikit-learn is mostly per-call overhead. Feature extraction takes ~1.3 ms of each feature-based figure. Latency was measured on a laptop CPU and varies by up to ~2× between runs; the gap between tree ensembles and the other models holds.
 
 **Takeaways**
 
@@ -51,15 +51,15 @@ Balanced accuracy, mean over 5 seeds (1D-CNN: 3 seeds). Chance is 0.25.
 - Time statistics (especially kurtosis, crest and impulse factor) identify the recording far better than the fault class (η² ≈ 0.9 vs ≈ 0.27). BPFI_h1 is the only feature where the two are close.
 - **Recommended lightweight model:** gradient boosting on time and envelope features. It has the best score on unseen fault sizes, is the only model that recovers ball faults, and stays under 600 kB. The 1D-CNN tops the easy protocols but learns recording-specific waveforms and labels unseen outer race faults as ball faults.
 
-Full tables are in [`results/`](results/).
+The full tables (per-seed ranges, macro-F1, per-class recall, confusion matrices) are in §5 and §6 of the notebook.
 
 ## Repository layout
 
 ```
-CWRU_bearing_signals.ipynb   the analysis (outputs included)
-bearings.py                  data download/reading, bearing geometry, spectra, envelope, features
-models.py                    model zoo (one per family), 1D-CNN, size/latency helpers
-results/                     CSV tables written by the notebook
+CWRU_bearing_signals.ipynb   the analysis, with all figures and tables in its outputs
+src/
+  bearings.py                data download/reading, bearing geometry, spectra, envelope, features
+  models.py                  model zoo (one per family), 1D-CNN, size/latency helpers
 pyproject.toml, uv.lock      environment (Python 3.12, managed with uv)
 ```
 
@@ -69,6 +69,8 @@ pyproject.toml, uv.lock      environment (Python 3.12, managed with uv)
 uv sync                      # creates .venv with numpy, scipy, pandas, scikit-learn, matplotlib, torch
 uv run --with jupyterlab jupyter lab   # or open the notebook in VS Code with the .venv kernel
 ```
+
+Run the notebook from the repository root, so that `from src import bearings` resolves and the data lands in `data/cwru/`.
 
 A full run downloads the data on first use and takes about 25 minutes on a laptop CPU, mostly 1D-CNN training in §6.
 
