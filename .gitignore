@@ -1,0 +1,11 @@
+# environment
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# raw data (downloaded on demand by bearings.download())
+data/
+*.part
+
+# OS
+.DS_Store

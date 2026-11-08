@@ -1,0 +1,10 @@
+features,size,balanced_accuracy,Normal,Inner race,Outer race,Ball
+Both,0.007,0.83,1.0,1.0,0.99,0.34
+Both,0.014,0.5,1.0,0.0,0.0,1.0
+Both,0.021,0.81,1.0,1.0,1.0,0.23
+Envelope physics,0.007,0.77,0.92,1.0,1.0,0.14
+Envelope physics,0.014,0.38,0.99,0.12,0.0,0.42
+Envelope physics,0.021,0.74,0.87,1.0,1.0,0.1
+Time statistics,0.007,0.51,1.0,0.03,0.0,1.0
+Time statistics,0.014,0.5,1.0,0.0,0.0,1.0
+Time statistics,0.021,0.66,1.0,0.03,1.0,0.62
