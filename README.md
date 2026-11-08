@@ -4,7 +4,7 @@ Rolling-bearing fault diagnosis on the public [Case Western Reserve University (
 
 The notebook answers three questions:
 
-1. **Can classical signal processing recover the fault frequency predicted by bearing geometry?** Spectrum, spectrogram, spectral kurtosis, envelope analysis, measured vs nominal shaft speed.
+1. **Can classical signal processing recover the fault frequency predicted by bearing geometry?** Raw waveforms, amplitude distributions, per-recording statistics, PSDs, spectrograms, spectral kurtosis and an envelope order map, compared across fault type, fault size and load, plus measured vs nominal shaft speed.
 2. **How much of a model's score survives when the test data comes from conditions it never saw?** One random forest under three test protocols: random windows, unseen motor load, unseen fault size.
 3. **Which lightweight classifier family generalises best, and at what cost?** Logistic regression, k-NN, SVM, random forest, gradient boosting, MLP and a small 1D-CNN on raw vibration, evaluated on the same folds, plus model size and latency.
 
@@ -45,6 +45,7 @@ Balanced accuracy, mean over 5 seeds (1D-CNN: 3 seeds). Chance is 0.25.
 
 **Takeaways**
 
+- Across conditions, **load barely changes the signal** (waveform, level, spectrum), while **each fault size behaves like a different machine**: the 0.014 in inner race fault is the most impulsive, the 0.014 in outer race fault looks almost healthy, and no ball fault shows a BSF line.
 - Holding out a load barely changes the score. Holding out a fault size does, and **both the feature ranking and the model ranking flip** between random and unseen-damage splits. A random split would select the wrong features and the wrong model.
 - Every model scores about 0.5 when the 0.014 in fault size is held out, because that outer race fault has almost no BPFO signature in the data. That part of the drop is a data limit, not a modelling failure.
 - Time statistics (especially kurtosis, crest and impulse factor) identify the recording far better than the fault class (η² ≈ 0.9 vs ≈ 0.27). BPFI_h1 is the only feature where the two are close.
